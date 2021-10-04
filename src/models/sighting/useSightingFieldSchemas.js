@@ -57,13 +57,13 @@ export default function useSightingFieldSchemas() {
       );
 
       const siteSpecies = get(data, ['site.species', 'value'], []);
-      const siteItisIds = siteSpecies.map(species => species.itisTsn);
+      const siteItisIds = siteSpecies.map(species => get(species, 'scientificName', '').toLowerCase());
 
       const relevantDetectionModels = omitBy(
         detectionConfig,
         model => {
           const siteSupportedSpecies = model.supported_species.filter(
-            species => siteItisIds.includes(species.itis_id),
+            species => siteItisIds.includes(get(species, 'scientific_name', '').toLowerCase()),
           );
           return siteSupportedSpecies.length === 0;
         },
